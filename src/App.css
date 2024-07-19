@@ -2,3 +2,40 @@
   max-width: 1280px;
   margin: 0 auto;
 }
+
+.add-btn{
+  margin-right: 20px;
+  padding: 10px;
+  text-decoration: none;
+  color: black;
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid;
+}
+
+.add-btn:hover{
+  border-color: red;
+}
+.add-btn:active{
+  background-color: #dcdcdc;
+}
+
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  text-align: center;
+}
+
+.not-found-header {
+  font-size: 6rem;
+  margin: 0;
+  color: white;
+}
+
+.not-found-text {
+  font-size: 1.5rem;
+  color: white;
+}
