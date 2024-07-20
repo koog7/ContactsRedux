@@ -2,6 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 
 interface ContactProps{
     id: string;
+    name: string;
     number: string;
     email: string;
     photo: string;

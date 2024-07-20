@@ -39,3 +39,35 @@
   font-size: 1.5rem;
   color: white;
 }
+
+
+/* Основные стили для всех инпутов */
+input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+input:focus {
+  border-color: #4CAF50;
+  outline: none;
+  width: 300px;
+}
+input[name="name"] {
+  background-color: #f9f9f9;
+}
+input[name="number"] {
+  background-color: #e9f9e9;
+}
+
+input[name="email"] {
+  background-color: #f0f8ff;
+}
+
+input[name="photo"] {
+  background-color: #fff0f5;
+}
