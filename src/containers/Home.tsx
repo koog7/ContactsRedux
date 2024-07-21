@@ -45,7 +45,7 @@ const Home = () => {
 
             {selectedContact && (
                 <div className={"overlay"} onClick={closeOverlay}>
-                    <div className={"content"}>
+                    <div className={"content"} onClick={e => e.stopPropagation()}>
                         <div className={'contact'}>
                             <div className={'img-block'}>
                                 <img src={selectedContact.photo} alt={selectedContact.name} style={{width: '100px', height: '100px', borderRadius: '50%'}}/>
@@ -57,7 +57,7 @@ const Home = () => {
                                     {selectedContact.email}
                                 </div>
                                 <div className={'card-btn'}>
-                                    <button className={'edit'}><NavLink style={{color:'white', textDecoration:'none'}} to={'/'}>Edit</NavLink></button>
+                                    <NavLink style={{color:'white', textDecoration:'none'}} to={`/info/${id}/edit`} className={'edit'}>Edit</NavLink>
                                     <button className={'close'}><NavLink style={{color:'white', textDecoration:'none'}} to={'/'}>Delete</NavLink></button>
                                 </div>
                             </div>

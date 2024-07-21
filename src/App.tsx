@@ -22,6 +22,9 @@ const App = () => {
                 <Route path="/info/:id" element={(
                     <Home/>
                 )}/>
+                <Route path="/info/:id/edit" element={(
+                    <CreateEditBlock/>
+                )}/>
                 <Route path="*" element={(
                     <NotFound/>
                 )}/>

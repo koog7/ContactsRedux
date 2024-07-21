@@ -1,9 +1,11 @@
-import {ChangeEvent, FormEvent, useState} from "react";
+import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {NavLink, useNavigate, useParams} from "react-router-dom";
 import '../App.css'
 import {AppDispatch} from "../app/store.ts";
 import {useDispatch} from "react-redux";
 import {postContact} from "./FetchSlice/FetchSlice.tsx";
+import axiosAPI from "../../axios/AxiosAPI.ts";
+
 interface ContactProps{
     name: string;
     number: string;
@@ -19,7 +21,21 @@ const CreateEditBlock = () => {
         photo: '',
     });
     const dispatch = useDispatch<AppDispatch>();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const {id} = useParams();
+
+
+    useEffect(  () => {
+        if(id){
+            const getData = async () => {
+                const response = await axiosAPI.get<ContactProps>(`/contacts/${id}.json`);
+                console.log(response.data)
+                setContactData(response.data);
+            }
+            getData();
+        }
+    }, [id]);
+
     const formChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setContactData((prevData) => ({...prevData, [name]: value}));
