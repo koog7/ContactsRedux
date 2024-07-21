@@ -40,8 +40,6 @@
   color: white;
 }
 
-
-/* Основные стили для всех инпутов */
 input {
   width: 100%;
   padding: 12px 20px;
@@ -50,6 +48,7 @@ input {
   border: 2px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
+  color: black;
 }
 
 input:focus {
@@ -71,3 +70,16 @@ input[name="email"] {
 input[name="photo"] {
   background-color: #fff0f5;
 }
+
+
+.btn-create, .btn-back{
+  padding: 10px;
+  margin-right: 10px;
+  background-color: white;
+  color: black;
+ }
+
+ .btn-link{
+   text-decoration: none;
+   color: black;
+ }
