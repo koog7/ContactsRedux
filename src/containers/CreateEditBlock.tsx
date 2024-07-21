@@ -1,6 +1,9 @@
-import {ChangeEvent, useState} from "react";
-import {NavLink} from "react-router-dom";
+import {ChangeEvent, FormEvent, useState} from "react";
+import {NavLink, useNavigate, useParams} from "react-router-dom";
 import '../App.css'
+import {AppDispatch} from "../app/store.ts";
+import {useDispatch} from "react-redux";
+import {postContact} from "./FetchSlice/FetchSlice.tsx";
 interface ContactProps{
     name: string;
     number: string;
@@ -15,17 +18,25 @@ const CreateEditBlock = () => {
         email: '',
         photo: '',
     });
-
+    const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate()
     const formChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setContactData((prevData) => ({...prevData, [name]: value}));
         console.log(contactData)
     };
 
+    const submitData = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if (contactData.name.trim() !== '' && contactData.number.trim() !== '' && contactData.email.trim() !== '' && contactData.photo.trim() !== '') {
+            dispatch(postContact(contactData))
+            navigate('/')
+        }
+    }
     return (
         <div>
             <div style={{width:'300px', display:'flex', flexDirection:'column', margin: '0 auto'}}>
-                <form>
+                <form onSubmit={submitData}>
                     <label htmlFor="name">Name:</label>
                     <input type="text" id="name" name="name" value={contactData.name} onChange={formChange}/>
 
@@ -46,7 +57,7 @@ const CreateEditBlock = () => {
                     </div>
 
                     <div style={{width:'400px'}}>
-                        <button className={'btn-create'}>Save</button>
+                        <button className={'btn-create'} type={"submit"}>Save</button>
                         <button className={'btn-back'}><NavLink className={'btn-link'} to={'/'}>Back to contacts</NavLink></button>
                     </div>
                 </form>

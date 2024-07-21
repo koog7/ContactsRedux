@@ -1,4 +1,5 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import axiosAPI from "../../../axios/AxiosAPI.ts";
 
 interface ContactProps{
     id: string;
@@ -20,6 +21,15 @@ const initialState: ContactState = {
     error: false,
 }
 
+
+export const postContact = createAsyncThunk<ContactProps, ContactProps>('contacts/postContact', async (newTodo) => {
+    try{
+        const response = await axiosAPI.post<ContactProps>('/contacts.json', newTodo);
+        return { ...newTodo, id: response.data.name };
+    }catch (error) {
+        console.error('Error:', error);
+    }
+});
 export const ContactSlice = createSlice({
     name: 'contacts',
     initialState,
@@ -27,7 +37,23 @@ export const ContactSlice = createSlice({
         setLog: (state) => {
             console.log(state)
         }
-    }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(postContact.pending, (state:ContactState) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(postContact.fulfilled, (state:ContactState, action: PayloadAction<ContactProps>) => {
+                state.contacts.push(action.payload);
+                state.loading = false;
+                console.log(state.contacts)
+            })
+            .addCase(postContact.rejected, (state:ContactState) => {
+                state.loading = false;
+                state.error = true;
+            });
+    },
 })
 
 
