@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import axiosAPI from "../../../axios/AxiosAPI.ts";
+import {RootState} from "../../app/store.ts";
 
 interface ContactProps{
     id: string;
@@ -21,7 +22,17 @@ const initialState: ContactState = {
     error: false,
 }
 
-
+export const getContacts = createAsyncThunk<ContactProps[], void, { state: RootState }>('todos/fetchMovies', async (word) => {
+    try{
+        const response = await axiosAPI.get<{ [key: string]: ContactProps }>(`/contacts.json`);
+        return Object.keys(response.data).map(key => ({
+            ...response.data[key],
+            id: key
+        }));
+    }catch (error) {
+        console.error('Error:', error);
+    }
+});
 export const postContact = createAsyncThunk<ContactProps, ContactProps>('contacts/postContact', async (newTodo) => {
     try{
         const response = await axiosAPI.post<ContactProps>('/contacts.json', newTodo);
@@ -50,6 +61,17 @@ export const ContactSlice = createSlice({
                 console.log(state.contacts)
             })
             .addCase(postContact.rejected, (state:ContactState) => {
+                state.loading = false;
+                state.error = true;
+            }).addCase(getContacts.pending, (state:ContactState) => {
+            state.loading = true;
+            state.error = false;
+            })
+            .addCase(getContacts.fulfilled, (state:ContactState, action: PayloadAction<ContactProps[]>) => {
+                state.contacts = action.payload;
+                state.loading = false;
+            })
+            .addCase(getContacts.rejected, (state:ContactState) => {
                 state.loading = false;
                 state.error = true;
             });
