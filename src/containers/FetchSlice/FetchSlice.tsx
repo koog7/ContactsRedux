@@ -2,7 +2,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import axiosAPI from "../../../axios/AxiosAPI.ts";
 import {RootState} from "../../app/store.ts";
 
-interface ContactProps{
+export interface ContactProps{
     id: string;
     name: string;
     number: string;

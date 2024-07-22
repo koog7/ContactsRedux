@@ -3,6 +3,7 @@ import {RootState} from "../app/store.ts";
 import {useEffect, useState} from "react";
 import {deleteContact, getContacts} from "./FetchSlice/FetchSlice.tsx";
 import {NavLink, useNavigate, useParams} from "react-router-dom";
+import ContactsOverlay from "../components/ContactsOverlay.tsx";
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -54,32 +55,14 @@ const Home = () => {
                     </div>
                 </NavLink>
             ))}
-
+            {error && <div className="error">Something gone wrong...</div>}
             {selectedContact && (
-                <div className={"overlay"} onClick={closeOverlay}>
-                    <div className={"content"} onClick={e => e.stopPropagation()}>
-                        <div className={'contact'}>
-                            <div className={'img-block'}>
-                                <img src={selectedContact.photo} alt={selectedContact.name}
-                                     style={{width: '100px', height: '100px', borderRadius: '50%'}}/>
-                            </div>
-                            <div className={'contact-info info-d'}>
-                                <div>
-                                    <strong>{selectedContact.name}</strong><br/>
-                                    +{selectedContact.number}<br/>
-                                    {selectedContact.email}
-                                </div>
-                                <div className={'card-btn'}>
-                                    <NavLink style={{color: 'white', textDecoration: 'none'}} to={`/info/${id}/edit`}
-                                             className={'edit'}>Edit</NavLink>
-                                    <button className={'close'} onClick={DeleteContact}><NavLink
-                                        style={{color: 'white', textDecoration: 'none'}} to={'/'}>Delete</NavLink>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ContactsOverlay
+                    selectedContact={selectedContact}
+                    id={`${id}`}
+                    closeOverlay={closeOverlay}
+                    deleteContact={DeleteContact}
+                />
             )}
         </div>
     );
