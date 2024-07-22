@@ -50,7 +50,7 @@ export const putContact = createAsyncThunk<ContactProps, { id: string, updatedCo
     }
 });
 
-export const deleteContact = createAsyncThunk<string, string, { state: RootState }>('contacts/deleteContact', async (id) => {
+export const deleteContact = createAsyncThunk<string, string, { state: RootState }>('contacts/deleteContact', async (id:string) => {
     try {
         await axiosAPI.delete(`/contacts/${id}.json`);
         return id;
@@ -63,9 +63,9 @@ export const ContactSlice = createSlice({
     name: 'contacts',
     initialState,
     reducers: {
-        setLog: (state) => {
-            console.log(state)
-        }
+        clearError: (state) => {
+            state.error = false;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -118,5 +118,6 @@ export const ContactSlice = createSlice({
     },
 })
 
-
 export const ContactReducer = ContactSlice.reducer;
+
+export const  {clearError}  = ContactSlice.actions;

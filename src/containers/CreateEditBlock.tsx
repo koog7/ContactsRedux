@@ -3,7 +3,7 @@ import {NavLink, useNavigate, useParams} from "react-router-dom";
 import '../App.css'
 import {AppDispatch, RootState} from "../app/store.ts";
 import {useDispatch, useSelector} from "react-redux";
-import {postContact, putContact} from "./FetchSlice/FetchSlice.tsx";
+import {clearError, postContact, putContact} from "./FetchSlice/FetchSlice.tsx";
 import axiosAPI from "../../axios/AxiosAPI.ts";
 
 interface ContactProps{
@@ -23,7 +23,7 @@ const CreateEditBlock = () => {
     const {id} = useParams();
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-    const {loading} = useSelector((state: RootState) => state.contacts);
+    const {loading, error} = useSelector((state: RootState) => state.contacts);
     useEffect(  () => {
         if(id){
             const getData = async () => {
@@ -84,6 +84,7 @@ const CreateEditBlock = () => {
                         <button className={'btn-back'}><NavLink className={'btn-link'} to={'/'}>Back to
                             contacts</NavLink></button>
                     </div>
+                    {error && <div className="error">Something gone wrong...</div>}
                 </form>
             </div>
         </div>
