@@ -18,7 +18,6 @@ const Home = () => {
     useEffect(() => {
         if (id) {
             setSelectedContact(contacts.find(contact => contact.id === id));
-            console.log(selectedContact)
         }
     }, [id]);
 
@@ -38,6 +37,9 @@ const Home = () => {
 
     return (
         <div>
+            <div id="loader-container" style={{display: loading ? 'block' : 'none'}}>
+                <div className="loader"></div>
+            </div>
             {contacts.map(contact => (
                 <NavLink key={contact.id} to={`/info/${contact.id}`} className={'contact-block'}>
                     <div className={'contact'}>
@@ -45,7 +47,7 @@ const Home = () => {
                             <img src={contact.photo} alt={contact.name} style={{width: '75px', height: '75px'}}/>
                         </div>
                         <div className={'contact-info'}>
-                        <strong>{contact.name}</strong><br/>
+                            <strong>{contact.name}</strong><br/>
                             +{contact.number}<br/>
                             {contact.email}
                         </div>
@@ -58,7 +60,8 @@ const Home = () => {
                     <div className={"content"} onClick={e => e.stopPropagation()}>
                         <div className={'contact'}>
                             <div className={'img-block'}>
-                                <img src={selectedContact.photo} alt={selectedContact.name} style={{width: '100px', height: '100px', borderRadius: '50%'}}/>
+                                <img src={selectedContact.photo} alt={selectedContact.name}
+                                     style={{width: '100px', height: '100px', borderRadius: '50%'}}/>
                             </div>
                             <div className={'contact-info info-d'}>
                                 <div>
@@ -67,8 +70,11 @@ const Home = () => {
                                     {selectedContact.email}
                                 </div>
                                 <div className={'card-btn'}>
-                                    <NavLink style={{color:'white', textDecoration:'none'}} to={`/info/${id}/edit`} className={'edit'}>Edit</NavLink>
-                                    <button className={'close'} onClick={DeleteContact}><NavLink style={{color:'white', textDecoration:'none'}} to={'/'}>Delete</NavLink></button>
+                                    <NavLink style={{color: 'white', textDecoration: 'none'}} to={`/info/${id}/edit`}
+                                             className={'edit'}>Edit</NavLink>
+                                    <button className={'close'} onClick={DeleteContact}><NavLink
+                                        style={{color: 'white', textDecoration: 'none'}} to={'/'}>Delete</NavLink>
+                                    </button>
                                 </div>
                             </div>
                         </div>

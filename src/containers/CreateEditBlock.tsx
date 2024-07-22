@@ -1,8 +1,8 @@
 import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {NavLink, useNavigate, useParams} from "react-router-dom";
 import '../App.css'
-import {AppDispatch} from "../app/store.ts";
-import {useDispatch} from "react-redux";
+import {AppDispatch, RootState} from "../app/store.ts";
+import {useDispatch, useSelector} from "react-redux";
 import {postContact, putContact} from "./FetchSlice/FetchSlice.tsx";
 import axiosAPI from "../../axios/AxiosAPI.ts";
 
@@ -23,18 +23,16 @@ const CreateEditBlock = () => {
     const {id} = useParams();
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-
+    const {loading} = useSelector((state: RootState) => state.contacts);
     useEffect(  () => {
         if(id){
             const getData = async () => {
                 const response = await axiosAPI.get<ContactProps>(`/contacts/${id}.json`);
-                console.log(response.data)
                 setContactData(response.data);
             }
             getData();
         }
     }, [id]);
-
     const formChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setContactData((prevData) => ({...prevData, [name]: value}));
@@ -46,6 +44,7 @@ const CreateEditBlock = () => {
         if (contactData.name.trim() !== '' && contactData.number.trim() !== '' && contactData.email.trim() !== '' && contactData.photo.trim() !== '') {
             if(id){
                 await dispatch(putContact({ id, updatedContact: contactData }));
+                console.log(loading)
                 navigate('/')
             }else{
                 await dispatch(postContact(contactData))
@@ -56,7 +55,10 @@ const CreateEditBlock = () => {
 
     return (
         <div>
-            <div style={{width:'300px', display:'flex', flexDirection:'column', margin: '0 auto'}}>
+            <div id="loader-container" style={{display: loading ? 'block' : 'none'}}>
+                <div className="loader"></div>
+            </div>
+            <div style={{width: '300px', display: 'flex', flexDirection: 'column', margin: '0 auto'}}>
                 <form onSubmit={submitData}>
                     <label htmlFor="name">Name:</label>
                     <input type="text" id="name" name="name" value={contactData.name} onChange={formChange}/>
@@ -77,9 +79,10 @@ const CreateEditBlock = () => {
                              alt={'Photo preview contact'}/>
                     </div>
 
-                    <div style={{width:'400px'}}>
+                    <div style={{width: '400px'}}>
                         <button className={'btn-create'} type={"submit"}>Save</button>
-                        <button className={'btn-back'}><NavLink className={'btn-link'} to={'/'}>Back to contacts</NavLink></button>
+                        <button className={'btn-back'}><NavLink className={'btn-link'} to={'/'}>Back to
+                            contacts</NavLink></button>
                     </div>
                 </form>
             </div>
