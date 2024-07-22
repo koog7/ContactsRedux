@@ -49,8 +49,6 @@ const Home = () => {
                         </div>
                         <div className={'contact-info'}>
                             <strong>{contact.name}</strong><br/>
-                            +{contact.number}<br/>
-                            {contact.email}
                         </div>
                     </div>
                 </NavLink>

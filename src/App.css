@@ -92,12 +92,17 @@ input[name="photo"] {
   text-decoration: none;
   color: white;
 }
+.contact{
+  border: 1px solid white;
+  margin-top: 20px;
+}
 .img-block{
   padding: 10px;
 }
 .contact-info{
   padding: 10px;
   align-items: center;
+  margin-top: 25px;
 }
 
 .overlay {
