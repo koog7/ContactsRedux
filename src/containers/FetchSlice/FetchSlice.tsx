@@ -22,7 +22,7 @@ const initialState: ContactState = {
     error: false,
 }
 
-export const getContacts = createAsyncThunk<ContactProps[], void, { state: RootState }>('todos/fetchMovies', async (word) => {
+export const getContacts = createAsyncThunk<ContactProps[], void, { state: RootState }>('contacts/getMovies', async () => {
     try{
         const response = await axiosAPI.get<{ [key: string]: ContactProps }>(`/contacts.json`);
         return Object.keys(response.data).map(key => ({
@@ -33,11 +33,19 @@ export const getContacts = createAsyncThunk<ContactProps[], void, { state: RootS
         console.error('Error:', error);
     }
 });
-export const postContact = createAsyncThunk<ContactProps, ContactProps>('contacts/postContact', async (newTodo) => {
+export const postContact = createAsyncThunk<ContactProps, ContactProps>('contacts/postContact', async (newContact) => {
     try{
-        const response = await axiosAPI.post<ContactProps>('/contacts.json', newTodo);
-        return { ...newTodo, id: response.data.name };
+        const response = await axiosAPI.post<ContactProps>('/contacts.json', newContact);
+        return { ...newContact, id: response.data.name };
     }catch (error) {
+        console.error('Error:', error);
+    }
+});
+export const putContact = createAsyncThunk<ContactProps, { id: string, updatedContact: ContactProps }>('contacts/putContact', async ({id, updatedContact}) => {
+    try {
+        const response = await axiosAPI.put<ContactProps>(`/contacts/${id}.json`, updatedContact);
+        return response.data;
+    } catch (error) {
         console.error('Error:', error);
     }
 });
@@ -64,14 +72,27 @@ export const ContactSlice = createSlice({
                 state.loading = false;
                 state.error = true;
             }).addCase(getContacts.pending, (state:ContactState) => {
-            state.loading = true;
-            state.error = false;
+                state.loading = true;
+                state.error = false;
             })
             .addCase(getContacts.fulfilled, (state:ContactState, action: PayloadAction<ContactProps[]>) => {
                 state.contacts = action.payload;
                 state.loading = false;
             })
             .addCase(getContacts.rejected, (state:ContactState) => {
+                state.loading = false;
+                state.error = true;
+            }).addCase(putContact.pending, (state:ContactState) => {
+                state.loading = true;
+                state.error = false;
+            }).addCase(putContact.fulfilled, (state:ContactState, action: PayloadAction<ContactProps>) => {
+                const index = state.contacts.findIndex(contact => contact.id === action.payload.id);
+                if (index !== -1) {
+                    state.contacts[index] = action.payload;
+                }
+                state.loading = false;
+            })
+            .addCase(putContact.rejected, (state:ContactState) => {
                 state.loading = false;
                 state.error = true;
             });

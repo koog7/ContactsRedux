@@ -3,7 +3,7 @@ import {NavLink, useNavigate, useParams} from "react-router-dom";
 import '../App.css'
 import {AppDispatch} from "../app/store.ts";
 import {useDispatch} from "react-redux";
-import {postContact} from "./FetchSlice/FetchSlice.tsx";
+import {postContact, putContact} from "./FetchSlice/FetchSlice.tsx";
 import axiosAPI from "../../axios/AxiosAPI.ts";
 
 interface ContactProps{
@@ -20,10 +20,9 @@ const CreateEditBlock = () => {
         email: '',
         photo: '',
     });
+    const {id} = useParams();
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-    const {id} = useParams();
-
 
     useEffect(  () => {
         if(id){
@@ -42,11 +41,16 @@ const CreateEditBlock = () => {
         console.log(contactData)
     };
 
-    const submitData = (e: FormEvent<HTMLFormElement>) => {
+    const submitData = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (contactData.name.trim() !== '' && contactData.number.trim() !== '' && contactData.email.trim() !== '' && contactData.photo.trim() !== '') {
-            dispatch(postContact(contactData))
-            navigate('/')
+            if(id){
+                await dispatch(putContact({ id, updatedContact: contactData }));
+                navigate('/')
+            }else{
+                await dispatch(postContact(contactData))
+                navigate('/')
+            }
         }
     }
     return (
