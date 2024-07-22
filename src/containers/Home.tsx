@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../app/store.ts";
 import {useEffect, useState} from "react";
-import {getContacts} from "./FetchSlice/FetchSlice.tsx";
+import {deleteContact, getContacts} from "./FetchSlice/FetchSlice.tsx";
 import {NavLink, useNavigate, useParams} from "react-router-dom";
 
 const Home = () => {
@@ -26,6 +26,16 @@ const Home = () => {
         await setSelectedContact(null)
         navigate('/')
     }
+
+    const DeleteContact = async () => {
+        try {
+            await dispatch(deleteContact(id));
+            await setSelectedContact(null)
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     return (
         <div>
             {contacts.map(contact => (
@@ -58,7 +68,7 @@ const Home = () => {
                                 </div>
                                 <div className={'card-btn'}>
                                     <NavLink style={{color:'white', textDecoration:'none'}} to={`/info/${id}/edit`} className={'edit'}>Edit</NavLink>
-                                    <button className={'close'}><NavLink style={{color:'white', textDecoration:'none'}} to={'/'}>Delete</NavLink></button>
+                                    <button className={'close'} onClick={DeleteContact}><NavLink style={{color:'white', textDecoration:'none'}} to={'/'}>Delete</NavLink></button>
                                 </div>
                             </div>
                         </div>

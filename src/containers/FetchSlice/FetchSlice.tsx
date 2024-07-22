@@ -49,6 +49,16 @@ export const putContact = createAsyncThunk<ContactProps, { id: string, updatedCo
         console.error('Error:', error);
     }
 });
+
+export const deleteContact = createAsyncThunk<string, string, { state: RootState }>('contacts/deleteContact', async (id) => {
+    try {
+        await axiosAPI.delete(`/contacts/${id}.json`);
+        return id;
+    }catch (error) {
+        console.error('Error:', error);
+    }
+});
+
 export const ContactSlice = createSlice({
     name: 'contacts',
     initialState,
@@ -95,7 +105,16 @@ export const ContactSlice = createSlice({
             .addCase(putContact.rejected, (state:ContactState) => {
                 state.loading = false;
                 state.error = true;
-            });
+            }).addCase(deleteContact.pending, (state: ContactState) => {
+                state.loading = true;
+                state.error = false;
+            }).addCase(deleteContact.fulfilled, (state: ContactState, action: PayloadAction<string>) => {
+                state.loading = false;
+                state.contacts = state.contacts.filter(todo => todo.id !== action.payload);
+            }).addCase(deleteContact.rejected, (state: ContactState) => {
+                state.loading = false;
+                state.error = true;
+        });
     },
 })
 

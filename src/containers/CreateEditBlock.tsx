@@ -53,6 +53,7 @@ const CreateEditBlock = () => {
             }
         }
     }
+
     return (
         <div>
             <div style={{width:'300px', display:'flex', flexDirection:'column', margin: '0 auto'}}>
